@@ -1,8 +1,26 @@
 # Finanças do Casal
 
-App simples de controle financeiro: lançamentos (receitas/despesas), categorias e saldo.
+Controle financeiro do casal: lançamentos, categorias, importação de fatura em CSV
+(Nubank/Itaú) com identificação de pessoa (Matheus/Bia/Casal), e dashboards por
+pessoa, por categoria e de insights.
 
 Stack: Next.js (App Router) + TypeScript + Tailwind CSS + Prisma + Postgres.
+
+## Funcionalidades
+
+- **Lançamentos manuais**: receita/despesa, categoria, pessoa, data.
+- **Importar CSV** (`/importar`): upload da fatura exportada do Nubank ou do Itaú.
+  O parser detecta automaticamente o formato (vírgula ou ponto e vírgula, data
+  ISO ou BR, valor com vírgula ou ponto decimal). Cada linha é revisada antes de
+  confirmar — você escolhe pessoa e categoria por gasto.
+- **Aprendizado de categoria**: ao confirmar uma importação, o sistema memoriza
+  a combinação estabelecimento → categoria/pessoa (`CategoryRule`). Da próxima
+  vez que um gasto parecido aparecer, a sugestão já vem preenchida.
+- **Dashboards**:
+  - `/dashboard/pessoa` — total gasto por pessoa no mês.
+  - `/dashboard/categoria` — total por categoria (despesas e receitas).
+  - `/dashboard/insights` — comparação com o mês anterior, categoria que mais
+    subiu/caiu, participação de cada pessoa no gasto, maiores gastos do mês.
 
 ## Publicar online (Vercel + Neon) — passo a passo
 
@@ -53,6 +71,20 @@ npm run dev
 ```
 
 Acesse http://localhost:3000.
+
+## Sobre o formato do CSV
+
+O importador (`src/lib/csvParser.ts`) foi feito para reconhecer automaticamente:
+- **Nubank**: cabeçalho `date,title,amount`.
+- **Itaú**: cabeçalho com `data`/`lançamento`/`valor`, separado por `;`, valor com vírgula decimal.
+- Se o cabeçalho não bater com nenhum desses, ele tenta a ordem posicional
+  (1ª coluna = data, 2ª = descrição, 3ª = valor).
+
+Como não testei contra um arquivo real do seu banco, é possível que a primeira
+importação precise de ajuste fino no parser — se algumas linhas vierem com erro
+("Data não reconhecida" / "Valor não reconhecido"), me mostre um trecho do CSV
+(pode remover/mascarar os valores se preferir, só preciso ver o formato das
+colunas) que eu ajusto o parser.
 
 ## Estrutura
 

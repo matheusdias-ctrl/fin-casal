@@ -10,7 +10,14 @@ type Transaction = {
   amountCents: number;
   type: "INCOME" | "EXPENSE";
   date: Date;
+  person: "MATHEUS" | "BIA" | "CASAL";
   category: { name: string };
+};
+
+const PERSON_LABELS: Record<Transaction["person"], string> = {
+  MATHEUS: "Matheus",
+  BIA: "Bia",
+  CASAL: "Casal",
 };
 
 export function TransactionList({ transactions }: { transactions: Transaction[] }) {
@@ -27,7 +34,7 @@ export function TransactionList({ transactions }: { transactions: Transaction[] 
           <div className="min-w-0">
             <p className="truncate font-medium text-slate-900">{t.description}</p>
             <p className="text-sm text-slate-500">
-              {t.category.name} · {formatDate(t.date)}
+              {t.category.name} · {PERSON_LABELS[t.person]} · {formatDate(t.date)}
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-3">

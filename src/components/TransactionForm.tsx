@@ -105,7 +105,7 @@ export function TransactionForm({ categories }: { categories: Category[] }) {
           />
         </div>
 
-        <div className="flex flex-col gap-1 sm:col-span-2">
+        <div className="flex flex-col gap-1">
           <label htmlFor="categoryId" className="text-xs font-medium text-slate-500">
             Categoria
           </label>
@@ -122,6 +122,22 @@ export function TransactionForm({ categories }: { categories: Category[] }) {
                 {category.name}
               </option>
             ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="person" className="text-xs font-medium text-slate-500">
+            De quem é
+          </label>
+          <select
+            id="person"
+            name="person"
+            defaultValue="CASAL"
+            className="rounded border border-slate-300 px-3 py-2 text-sm"
+          >
+            <option value="MATHEUS">Matheus</option>
+            <option value="BIA">Bia</option>
+            <option value="CASAL">Casal</option>
           </select>
         </div>
       </div>

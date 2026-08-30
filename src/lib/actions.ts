@@ -64,6 +64,7 @@ export async function createTransaction(formData: FormData) {
   const amountRaw = String(formData.get("amount") ?? "").trim().replace(",", ".");
   const type = String(formData.get("type") ?? "");
   const categoryId = String(formData.get("categoryId") ?? "");
+  const person = String(formData.get("person") ?? "");
   const dateRaw = String(formData.get("date") ?? "");
 
   const amount = Number.parseFloat(amountRaw);
@@ -77,6 +78,9 @@ export async function createTransaction(formData: FormData) {
   if (!categoryId) {
     throw new Error("Selecione uma categoria.");
   }
+  if (person !== "MATHEUS" && person !== "BIA" && person !== "CASAL") {
+    throw new Error("Selecione de quem é o lançamento.");
+  }
   if (Number.isNaN(amount) || amount <= 0) {
     throw new Error("Informe um valor válido, maior que zero.");
   }
@@ -87,6 +91,7 @@ export async function createTransaction(formData: FormData) {
       amountCents: Math.round(amount * 100),
       type,
       categoryId,
+      person,
       date: dateRaw ? new Date(`${dateRaw}T12:00:00.000Z`) : new Date(),
     },
   });

@@ -17,12 +17,19 @@ enum TransactionType {
   EXPENSE
 }
 
+enum Person {
+  MATHEUS
+  BIA
+  CASAL
+}
+
 model Category {
-  id           String            @id @default(cuid())
-  name         String
-  type         TransactionType
-  createdAt    DateTime          @default(now())
-  transactions Transaction[]
+  id            String            @id @default(cuid())
+  name          String
+  type          TransactionType
+  createdAt     DateTime          @default(now())
+  transactions  Transaction[]
+  categoryRules CategoryRule[]
 
   @@unique([name, type])
 }
@@ -33,7 +40,21 @@ model Transaction {
   amountCents Int
   type        TransactionType
   date        DateTime
+  person      Person           @default(CASAL)
   category    Category         @relation(fields: [categoryId], references: [id])
   categoryId  String
   createdAt   DateTime         @default(now())
+}
+
+/// Regra aprendida a partir de importações: quando um gasto com descrição
+/// parecida aparecer de novo, sugere a mesma categoria/pessoa usadas da
+/// última vez.
+model CategoryRule {
+  id         String   @id @default(cuid())
+  pattern    String   @unique
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  person     Person?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
