@@ -1,0 +1,25 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# env files (contain a real database connection string)
+.env
+.env*.local
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+
+# Claude Code local session settings (machine-specific, not project config)
+.claude/settings.local.json
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

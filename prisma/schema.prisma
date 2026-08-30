@@ -1,0 +1,39 @@
+// Banco de dados: Postgres hospedado (ex: Neon), para persistir os dados no
+// deploy online. DATABASE_URL deve ser a connection string "pooled";
+// DIRECT_URL deve ser a connection string direta (sem pooler), usada apenas
+// para rodar migrations.
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model Category {
+  id           String            @id @default(cuid())
+  name         String
+  type         TransactionType
+  createdAt    DateTime          @default(now())
+  transactions Transaction[]
+
+  @@unique([name, type])
+}
+
+model Transaction {
+  id          String           @id @default(cuid())
+  description String
+  amountCents Int
+  type        TransactionType
+  date        DateTime
+  category    Category         @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  createdAt   DateTime         @default(now())
+}
