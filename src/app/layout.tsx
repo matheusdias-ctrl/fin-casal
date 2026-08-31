@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
 
@@ -10,12 +12,14 @@ export const metadata: Metadata = {
   description: "Controle financeiro do casal: importação de fatura, categorias e dashboards.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="pt-BR">
       <body className={`${inter.className} bg-slate-50`}>
         <div className="flex min-h-screen flex-col sm:flex-row">
-          <Sidebar />
+          <Sidebar userEmail={session?.user?.email ?? null} />
           <div className="min-w-0 flex-1">{children}</div>
         </div>
       </body>

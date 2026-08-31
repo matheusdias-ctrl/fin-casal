@@ -36,6 +36,18 @@ function Brand() {
   );
 }
 
+function UserFooter({ userEmail }: { userEmail: string | null }) {
+  if (!userEmail) return null;
+  return (
+    <div className="border-t border-slate-200 px-4 py-3">
+      <p className="truncate text-xs text-slate-500">{userEmail}</p>
+      <a href="/api/auth/signout" className="text-xs font-medium text-brand hover:text-brand-dark">
+        Sair
+      </a>
+    </div>
+  );
+}
+
 function NavLinks({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
   return (
     <nav className="flex-1 space-y-0.5 px-2">
@@ -61,7 +73,7 @@ function NavLinks({ pathname, onNavigate }: { pathname: string; onNavigate?: () 
   );
 }
 
-export function Sidebar() {
+export function Sidebar({ userEmail }: { userEmail: string | null }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -84,6 +96,7 @@ export function Sidebar() {
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-slate-200 bg-white sm:flex">
         <Brand />
         <NavLinks pathname={pathname} />
+        <UserFooter userEmail={userEmail} />
       </aside>
 
       {/* sidebar em overlay no mobile */}
@@ -103,6 +116,7 @@ export function Sidebar() {
               </button>
             </div>
             <NavLinks pathname={pathname} onNavigate={() => setOpen(false)} />
+            <UserFooter userEmail={userEmail} />
           </aside>
         </div>
       )}
