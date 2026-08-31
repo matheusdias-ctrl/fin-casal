@@ -25,8 +25,8 @@ const LINKS = [
 
 function Brand() {
   return (
-    <div className="flex items-center gap-2 px-4 py-5">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-xs font-bold text-white">
+    <div className="flex items-center gap-2.5 px-4 py-5">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand text-xs font-bold text-white">
         FC
       </div>
       <span className="text-sm font-semibold text-slate-900">Finanças do Casal</span>
@@ -44,9 +44,9 @@ function NavLinks({ pathname, onNavigate }: { pathname: string; onNavigate?: () 
             key={href}
             href={href}
             onClick={onNavigate}
-            className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
               active
-                ? "bg-slate-900 text-white"
+                ? "bg-brand-light text-brand-dark"
                 : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
             }`}
           >

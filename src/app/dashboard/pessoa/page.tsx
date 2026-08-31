@@ -23,7 +23,7 @@ export default async function PersonDashboardPage({
   return (
     <main className="mx-auto max-w-2xl px-4 py-8">
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-slate-900">Gastos por pessoa</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Gastos por pessoa</h1>
         <MonthFilter value={range.value} />
       </div>
       <p className="mt-1 text-sm capitalize text-slate-500">{range.label}</p>
@@ -32,7 +32,7 @@ export default async function PersonDashboardPage({
         {totals.map((t) => {
           const pct = totalExpense > 0 ? (t.expenseCents / totalExpense) * 100 : 0;
           return (
-            <div key={t.person} className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            <div key={t.person} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
               <p className="text-sm font-medium text-slate-500">{PERSON_LABELS[t.person]}</p>
               <p className="mt-1 text-xl font-bold text-red-600">
                 {formatCurrency(t.expenseCents)}

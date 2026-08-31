@@ -105,16 +105,20 @@ export function ImportWizard({ categories }: { categories: Category[] }) {
 
   return (
     <div className="space-y-4">
-      <input
-        type="file"
-        accept=".csv,text/csv"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) handleFile(file);
-          e.target.value = "";
-        }}
-        className="block text-sm"
-      />
+      <label className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-slate-300 bg-white px-6 py-10 text-center transition-colors hover:border-brand hover:bg-brand-light/40">
+        <span className="text-sm font-medium text-slate-700">Clique para escolher o arquivo CSV</span>
+        <span className="text-xs text-slate-400">Fatura exportada do Nubank ou do Itaú</span>
+        <input
+          type="file"
+          accept=".csv,text/csv"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleFile(file);
+            e.target.value = "";
+          }}
+          className="sr-only"
+        />
+      </label>
 
       {isParsing && <p className="text-sm text-slate-500">Lendo arquivo...</p>}
       {error && <p className="text-sm text-red-600">{error}</p>}
@@ -122,21 +126,21 @@ export function ImportWizard({ categories }: { categories: Category[] }) {
 
       {rows.length > 0 && (
         <>
-          <div className="overflow-x-auto rounded-lg border border-slate-200">
+          <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
             <table className="w-full min-w-[720px] text-sm">
-              <thead className="bg-slate-50 text-left text-xs font-medium uppercase text-slate-500">
+              <thead className="bg-slate-50 text-left text-xs font-medium uppercase tracking-wide text-slate-500">
                 <tr>
-                  <th className="px-3 py-2">Incluir</th>
-                  <th className="px-3 py-2">Data</th>
-                  <th className="px-3 py-2">Descrição</th>
-                  <th className="px-3 py-2">Valor</th>
-                  <th className="px-3 py-2">Pessoa</th>
-                  <th className="px-3 py-2">Categoria</th>
+                  <th className="px-3 py-2.5">Incluir</th>
+                  <th className="px-3 py-2.5">Data</th>
+                  <th className="px-3 py-2.5">Descrição</th>
+                  <th className="px-3 py-2.5">Valor</th>
+                  <th className="px-3 py-2.5">Pessoa</th>
+                  <th className="px-3 py-2.5">Categoria</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {rows.map((row) => (
-                  <tr key={row.key} className={row.error ? "bg-red-50" : undefined}>
+                  <tr key={row.key} className={row.error ? "bg-red-50" : "hover:bg-slate-50"}>
                     <td className="px-3 py-2">
                       <input
                         type="checkbox"
@@ -162,7 +166,7 @@ export function ImportWizard({ categories }: { categories: Category[] }) {
                         onChange={(e) =>
                           updateRow(row.key, { person: e.target.value as PersonValue })
                         }
-                        className="rounded border border-slate-300 px-2 py-1 text-sm"
+                        className="rounded-md border border-slate-300 px-2 py-1 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-light"
                       >
                         {PERSON_OPTIONS.map((p) => (
                           <option key={p.value} value={p.value}>
@@ -175,7 +179,7 @@ export function ImportWizard({ categories }: { categories: Category[] }) {
                       <select
                         value={row.categoryId}
                         onChange={(e) => updateRow(row.key, { categoryId: e.target.value })}
-                        className="rounded border border-slate-300 px-2 py-1 text-sm"
+                        className="rounded-md border border-slate-300 px-2 py-1 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-light"
                       >
                         <option value="">Selecione</option>
                         {categoriesByType[row.type].map((c) => (
@@ -195,7 +199,7 @@ export function ImportWizard({ categories }: { categories: Category[] }) {
             type="button"
             onClick={handleSubmit}
             disabled={isSubmitting || selectedCount === 0}
-            className="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-dark disabled:opacity-50"
           >
             {isSubmitting ? "Importando..." : `Confirmar importação (${selectedCount})`}
           </button>

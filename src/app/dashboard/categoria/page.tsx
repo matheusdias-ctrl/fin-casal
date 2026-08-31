@@ -19,12 +19,12 @@ export default async function CategoryDashboardPage({
   return (
     <main className="mx-auto max-w-2xl px-4 py-8">
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-slate-900">Gastos por categoria</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Gastos por categoria</h1>
         <MonthFilter value={range.value} />
       </div>
       <p className="mt-1 text-sm capitalize text-slate-500">{range.label}</p>
 
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-sm font-semibold text-slate-700">Despesas</h2>
         {expenseTotals.length === 0 && (
           <p className="mt-2 text-sm text-slate-500">Sem despesas no período.</p>
@@ -48,7 +48,7 @@ export default async function CategoryDashboardPage({
       </section>
 
       {incomeTotals.length > 0 && (
-        <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-sm font-semibold text-slate-700">Receitas</h2>
           <ul className="mt-3 space-y-2">
             {incomeTotals.map((t) => (

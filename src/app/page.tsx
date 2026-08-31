@@ -57,20 +57,20 @@ export default async function DashboardPage({
     <main className="mx-auto max-w-3xl px-4 py-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Dashboard</h1>
           <p className="mt-1 text-sm capitalize text-slate-500">{range.label}</p>
         </div>
         <DashboardFilters month={range.value} person={person ?? ""} />
       </div>
 
       {!hasAnyData && (
-        <div className="mt-6 rounded-lg border border-dashed border-slate-300 bg-white p-6 text-center">
+        <div className="mt-6 rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center">
           <p className="text-sm text-slate-600">
             Nenhum lançamento nos últimos 6 meses ainda. Importe a fatura do cartão para começar.
           </p>
           <Link
             href="/importar"
-            className="mt-3 inline-block rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white"
+            className="mt-3 inline-block rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-dark"
           >
             Importar CSV
           </Link>
@@ -98,14 +98,14 @@ export default async function DashboardPage({
         />
       </div>
 
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-sm font-semibold text-slate-700">Evolução mês a mês</h2>
         <div className="mt-4">
           <EvolutionChart data={monthlySeries} />
         </div>
       </section>
 
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-sm font-semibold text-slate-700">Distribuição por categoria</h2>
         <div className="mt-4">
           <CategoryBarChart categories={expenseCategories} colorByCategoryId={categoryColorMap} />

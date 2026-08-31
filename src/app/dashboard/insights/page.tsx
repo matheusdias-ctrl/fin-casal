@@ -52,14 +52,14 @@ export default async function InsightsPage({
   return (
     <main className="mx-auto max-w-2xl px-4 py-8">
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-slate-900">Insights</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Insights</h1>
         <MonthFilter value={range.value} />
       </div>
       <p className="mt-1 text-sm capitalize text-slate-500">{range.label}</p>
 
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <p className="text-sm font-medium text-slate-500">Gasto total do mês</p>
-        <p className="mt-1 text-2xl font-bold text-slate-900">{formatCurrency(totalExpense)}</p>
+        <p className="mt-1 text-2xl font-bold tracking-tight text-slate-900">{formatCurrency(totalExpense)}</p>
         {diffPct !== null ? (
           <p className={`mt-1 text-sm ${diff > 0 ? "text-red-600" : "text-emerald-600"}`}>
             {diff > 0 ? "▲" : "▼"} {Math.abs(diffPct).toFixed(0)}% em relação ao mês anterior (
@@ -73,14 +73,14 @@ export default async function InsightsPage({
       {(biggestIncrease?.deltaCents > 0 || biggestDecrease?.deltaCents < 0) && (
         <section className="mt-6 grid gap-4 sm:grid-cols-2">
           {biggestIncrease && biggestIncrease.deltaCents > 0 && (
-            <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
               <p className="text-sm font-medium text-slate-500">Categoria que mais subiu</p>
               <p className="mt-1 font-semibold text-slate-900">{biggestIncrease.categoryName}</p>
               <p className="text-sm text-red-600">+ {formatCurrency(biggestIncrease.deltaCents)}</p>
             </div>
           )}
           {biggestDecrease && biggestDecrease.deltaCents < 0 && (
-            <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
               <p className="text-sm font-medium text-slate-500">Categoria que mais caiu</p>
               <p className="mt-1 font-semibold text-slate-900">{biggestDecrease.categoryName}</p>
               <p className="text-sm text-emerald-600">{formatCurrency(biggestDecrease.deltaCents)}</p>
@@ -89,7 +89,7 @@ export default async function InsightsPage({
         </section>
       )}
 
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-sm font-semibold text-slate-700">Participação por pessoa no gasto</h2>
         <ul className="mt-3 space-y-2">
           {personTotals.map((t) => {
@@ -106,7 +106,7 @@ export default async function InsightsPage({
         </ul>
       </section>
 
-      <section className="mt-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-sm font-semibold text-slate-700">Maiores gastos do mês</h2>
         {topExpenses.length === 0 ? (
           <p className="mt-2 text-sm text-slate-500">Sem gastos no período.</p>

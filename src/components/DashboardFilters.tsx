@@ -19,12 +19,12 @@ export function DashboardFilters({ month, person }: { month: string; person: str
         type="month"
         defaultValue={month}
         onChange={(e) => navigate(e.target.value, person)}
-        className="rounded border border-slate-300 px-3 py-2 text-sm"
+        className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 transition-colors focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-light"
       />
       <select
         defaultValue={person}
         onChange={(e) => navigate(month, e.target.value)}
-        className="rounded border border-slate-300 px-3 py-2 text-sm"
+        className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 transition-colors focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-light"
       >
         <option value="">Todos</option>
         <option value="MATHEUS">Matheus</option>
