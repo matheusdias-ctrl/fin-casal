@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { NavBar } from "@/components/NavBar";
+import { Sidebar } from "@/components/Sidebar";
 
 export const metadata: Metadata = {
   title: "Finanças do Casal",
-  description: "Controle financeiro simples para o casal: lançamentos, categorias e saldo.",
+  description: "Controle financeiro do casal: importação de fatura, categorias e dashboards.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body>
-        <NavBar />
-        {children}
+      <body className="bg-slate-50">
+        <div className="flex min-h-screen flex-col sm:flex-row">
+          <Sidebar />
+          <div className="min-w-0 flex-1">{children}</div>
+        </div>
       </body>
     </html>
   );

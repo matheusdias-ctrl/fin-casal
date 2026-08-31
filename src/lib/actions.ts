@@ -1,105 +1,77 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
 import type { TransactionType } from "@prisma/client";
 
+// Lista canônica de categorias do casal. Não há mais tela de cadastro manual
+// de categoria — este é o conjunto oficial usado na classificação dos gastos
+// importados via CSV.
 const DEFAULT_CATEGORIES: { name: string; type: TransactionType }[] = [
-  { name: "Salário", type: "INCOME" },
-  { name: "Outras receitas", type: "INCOME" },
   { name: "Moradia", type: "EXPENSE" },
-  { name: "Mercado", type: "EXPENSE" },
-  { name: "Transporte", type: "EXPENSE" },
+  { name: "Financiamento", type: "EXPENSE" },
+  { name: "Casa", type: "EXPENSE" },
+  { name: "Supermercado", type: "EXPENSE" },
+  { name: "Alimentação", type: "EXPENSE" },
+  { name: "Suplemento/farmacia", type: "EXPENSE" },
+  { name: "Pet", type: "EXPENSE" },
   { name: "Lazer", type: "EXPENSE" },
+  { name: "Assinatura", type: "EXPENSE" },
+  { name: "Viagem", type: "EXPENSE" },
+  { name: "Combustível", type: "EXPENSE" },
+  { name: "Seguro Veículo", type: "EXPENSE" },
+  { name: "Estacionamento", type: "EXPENSE" },
+  { name: "Lavagem carro", type: "EXPENSE" },
+  { name: "Uber / Taxi / 99Pop", type: "EXPENSE" },
+  { name: "Presente", type: "EXPENSE" },
+  { name: "Educação", type: "EXPENSE" },
+  { name: "Roupa", type: "EXPENSE" },
   { name: "Saúde", type: "EXPENSE" },
-  { name: "Outras despesas", type: "EXPENSE" },
+  { name: "Trabalho", type: "EXPENSE" },
+  { name: "Beleza", type: "EXPENSE" },
+  { name: "Telefonia", type: "EXPENSE" },
+  { name: "Doação", type: "EXPENSE" },
+  // Fallback para valores negativos da fatura (estorno/pagamento), já que não
+  // há mais lançamento manual de receita.
+  { name: "Estorno / Pagamento", type: "INCOME" },
 ];
 
-/** Lista as categorias, criando um conjunto padrão automaticamente na primeira vez. */
+/**
+ * Lista as categorias, sincronizando com a lista canônica acima: cria as que
+ * faltam e remove as antigas que não têm nenhum lançamento associado (para
+ * não deixar "lixo" de listas anteriores, sem risco de perder dados reais).
+ */
 export async function getCategories() {
-  const count = await prisma.category.count();
-  if (count === 0) {
-    await prisma.category.createMany({
-      data: DEFAULT_CATEGORIES,
-      skipDuplicates: true,
-    });
+  await Promise.all(
+    DEFAULT_CATEGORIES.map((c) =>
+      prisma.category.upsert({
+        where: { name_type: { name: c.name, type: c.type } },
+        update: {},
+        create: c,
+      })
+    )
+  );
+
+  const canonicalKeys = new Set(DEFAULT_CATEGORIES.map((c) => `${c.name}::${c.type}`));
+  const existing = await prisma.category.findMany({
+    include: { _count: { select: { transactions: true, categoryRules: true } } },
+  });
+  const staleIds = existing
+    .filter(
+      (c) =>
+        !canonicalKeys.has(`${c.name}::${c.type}`) &&
+        c._count.transactions === 0 &&
+        c._count.categoryRules === 0
+    )
+    .map((c) => c.id);
+
+  if (staleIds.length > 0) {
+    try {
+      await prisma.category.deleteMany({ where: { id: { in: staleIds } } });
+    } catch {
+      // Se algo passou a referenciar a categoria entre a checagem e o delete,
+      // apenas ignora e mantém a categoria antiga — nunca falha a página por causa disso.
+    }
   }
+
   return prisma.category.findMany({ orderBy: { name: "asc" } });
-}
-
-export async function getTransactions() {
-  return prisma.transaction.findMany({
-    include: { category: true },
-    orderBy: { date: "desc" },
-  });
-}
-
-/** Soma todas as transações e retorna o saldo em centavos (receitas - despesas). */
-export async function getBalance(): Promise<number> {
-  const transactions = await prisma.transaction.findMany({
-    select: { amountCents: true, type: true },
-  });
-  return transactions.reduce((total, t) => {
-    return t.type === "INCOME" ? total + t.amountCents : total - t.amountCents;
-  }, 0);
-}
-
-export async function createCategory(formData: FormData) {
-  const name = String(formData.get("name") ?? "").trim();
-  const type = String(formData.get("type") ?? "");
-
-  if (!name) {
-    throw new Error("Informe um nome para a categoria.");
-  }
-  if (type !== "INCOME" && type !== "EXPENSE") {
-    throw new Error("Tipo de categoria inválido.");
-  }
-
-  await prisma.category.create({ data: { name, type } });
-  revalidatePath("/");
-}
-
-export async function createTransaction(formData: FormData) {
-  const description = String(formData.get("description") ?? "").trim();
-  const amountRaw = String(formData.get("amount") ?? "").trim().replace(",", ".");
-  const type = String(formData.get("type") ?? "");
-  const categoryId = String(formData.get("categoryId") ?? "");
-  const person = String(formData.get("person") ?? "");
-  const dateRaw = String(formData.get("date") ?? "");
-
-  const amount = Number.parseFloat(amountRaw);
-
-  if (!description) {
-    throw new Error("Informe uma descrição.");
-  }
-  if (type !== "INCOME" && type !== "EXPENSE") {
-    throw new Error("Selecione o tipo do lançamento.");
-  }
-  if (!categoryId) {
-    throw new Error("Selecione uma categoria.");
-  }
-  if (person !== "MATHEUS" && person !== "BIA" && person !== "CASAL") {
-    throw new Error("Selecione de quem é o lançamento.");
-  }
-  if (Number.isNaN(amount) || amount <= 0) {
-    throw new Error("Informe um valor válido, maior que zero.");
-  }
-
-  await prisma.transaction.create({
-    data: {
-      description,
-      amountCents: Math.round(amount * 100),
-      type,
-      categoryId,
-      person,
-      date: dateRaw ? new Date(`${dateRaw}T12:00:00.000Z`) : new Date(),
-    },
-  });
-
-  revalidatePath("/");
-}
-
-export async function deleteTransaction(id: string) {
-  await prisma.transaction.delete({ where: { id } });
-  revalidatePath("/");
 }
