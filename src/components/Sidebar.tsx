@@ -9,6 +9,7 @@ import {
   IconUsers,
   IconTag,
   IconChart,
+  IconTrendingUp,
   IconSettings,
   IconMenu,
   IconClose,
@@ -16,6 +17,7 @@ import {
 
 const LINKS = [
   { href: "/", label: "Dashboard", Icon: IconHome },
+  { href: "/investimentos", label: "Investimentos", Icon: IconTrendingUp },
   { href: "/importar", label: "Importar CSV", Icon: IconUpload },
   { href: "/dashboard/pessoa", label: "Pessoas", Icon: IconUsers },
   { href: "/dashboard/categoria", label: "Categorias", Icon: IconTag },

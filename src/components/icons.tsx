@@ -80,6 +80,15 @@ export function IconSettings({ className }: IconProps) {
   );
 }
 
+export function IconTrendingUp({ className }: IconProps) {
+  return (
+    <Icon className={className}>
+      <path d="M3 17l6-6 4 4 8-8" />
+      <path d="M15 7h6v6" />
+    </Icon>
+  );
+}
+
 export function IconMenu({ className }: IconProps) {
   return (
     <Icon className={className}>

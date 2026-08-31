@@ -58,3 +58,22 @@ model CategoryRule {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
+
+model InvestmentType {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  createdAt   DateTime     @default(now())
+  investments Investment[]
+}
+
+/// Um "saldo atual" de investimento (não é um fluxo com data, é a posição/holding).
+model Investment {
+  id          String         @id @default(cuid())
+  person      Person
+  type        InvestmentType @relation(fields: [typeId], references: [id])
+  typeId      String
+  description String?
+  amountCents Int
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}

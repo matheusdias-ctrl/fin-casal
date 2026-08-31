@@ -9,15 +9,17 @@ type CategorySlice = { categoryId: string; categoryName: string; totalCents: num
 export function CategoryBarChart({
   categories,
   colorByCategoryId,
+  emptyMessage = "Sem despesas no período.",
 }: {
   categories: CategorySlice[];
   /** categoryId -> cor, atribuída de forma estável (independe do filtro atual). */
   colorByCategoryId: Record<string, string>;
+  emptyMessage?: string;
 }) {
   const [hoverId, setHoverId] = useState<string | null>(null);
 
   if (categories.length === 0) {
-    return <p className="text-sm text-slate-500">Sem despesas no período.</p>;
+    return <p className="text-sm text-slate-500">{emptyMessage}</p>;
   }
 
   const maxValue = Math.max(1, ...categories.map((c) => c.totalCents));
